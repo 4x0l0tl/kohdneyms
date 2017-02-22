@@ -1,0 +1,66 @@
+syntax = "proto3";
+package com.axolotl.kohdneyms;
+
+enum Team {
+	RED = 0;
+	BLUE = 1;
+}
+
+enum Role {
+	SPY = 0;
+	SPYMASTER = 1;
+}
+
+enum PieceType {
+	RED = 0;
+	BLUE = 1;
+	CIVILIAN = 2;
+	ASSASSIN = 3;
+}
+
+enum State {
+	SUCCESS = 0;
+	FAILURE = 1;
+}
+
+message Piece {
+	PieceType type = 1;
+	string word = 2;
+}
+
+message Board {
+	repeated Piece board = 1;
+}
+
+message PlayerSelection {
+	Team team = 1;
+	Role role = 2;
+}
+
+message Hint {
+	Team team = 1;
+	string word = 2;
+	string number = 3;
+}
+
+message HintFromServer {
+	Hint hint = 1;
+	State state = 2;
+}
+
+message WordSelection {
+	Team team = 1;
+	string word = 2;
+}
+
+message WordSelectionFromServer {
+	WordSelection selection = 1;
+	State state = 2;
+}
+
+service GameService{
+	rpc initialise(PlayerSelection) returns (Board);
+	rpc giveHint(stream Hint) returns (stream HintFromServer);
+	rpc selectWord(stream WordSelection) returns (stream WordSelectionFromServer);
+
+}
