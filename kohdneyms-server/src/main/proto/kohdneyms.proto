@@ -1,17 +1,12 @@
 syntax = "proto3";
 package com.axolotl.kohdneyms;
 
-enum Team {
-	RED_TEAM = 0;
-	BLUE_TEAM = 1;
-}
-
 enum Role {
 	SPY = 0;
 	SPYMASTER = 1;
 }
 
-enum PieceType {
+enum Type {
 	RED = 0;
 	BLUE = 1;
 	CIVILIAN = 2;
@@ -21,26 +16,28 @@ enum PieceType {
 enum State {
 	SUCCESS = 0;
 	FAILURE = 1;
+	END = 2;
 }
 
 message Piece {
-	PieceType type = 1;
+	Type type = 1;
 	string word = 2;
 }
 
 message Board {
 	repeated Piece board = 1;
+	Type starter = 2;
 }
 
 message PlayerSelection {
-	Team team = 1;
+	Type team = 1;
 	Role role = 2;
 }
 
 message Hint {
-	Team team = 1;
+	Type team = 1;
 	string word = 2;
-	string number = 3;
+	int32 number = 3;
 }
 
 message HintFromServer {
@@ -49,7 +46,7 @@ message HintFromServer {
 }
 
 message WordSelection {
-	Team team = 1;
+	Type team = 1;
 	string word = 2;
 }
 

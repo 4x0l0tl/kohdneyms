@@ -1,15 +1,13 @@
 package com.axolotl.kohdneyms;
-import com.axolotl.kohdneyms.GameServiceGrpc;
 import com.axolotl.kohdneyms.GameServiceGrpc.GameServiceBlockingStub;
 import com.axolotl.kohdneyms.GameServiceGrpc.GameServiceStub;
-import com.axolotl.kohdneyms.Kohdneyms;
 import com.axolotl.kohdneyms.Kohdneyms.Board;
 import com.axolotl.kohdneyms.Kohdneyms.Hint;
 import com.axolotl.kohdneyms.Kohdneyms.HintFromServer;
 import com.axolotl.kohdneyms.Kohdneyms.Piece;
 import com.axolotl.kohdneyms.Kohdneyms.PlayerSelection;
 import com.axolotl.kohdneyms.Kohdneyms.Role;
-import com.axolotl.kohdneyms.Kohdneyms.Team;
+import com.axolotl.kohdneyms.Kohdneyms.Type;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -20,7 +18,7 @@ public class KohdneymsClient {
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090).usePlaintext(true).build();
 		GameServiceStub stub = GameServiceGrpc.newStub(channel);
 		GameServiceBlockingStub blockingStub = GameServiceGrpc.newBlockingStub(channel);
-		Board board = blockingStub.initialise(PlayerSelection.newBuilder().setRole(Role.SPY).setTeam(Team.RED_TEAM).build());
+		Board board = blockingStub.initialise(PlayerSelection.newBuilder().setRole(Role.SPY).setTeam(Type.RED).build());
 		for(Piece piece : board.getBoardList()) {
 			System.out.println("Type:"+ piece.getType() + " Word:"+ piece.getWord());
 		}
@@ -42,7 +40,7 @@ public class KohdneymsClient {
 				System.out.println("Disconnected");				
 			}
 		});
-		hintObserver.onNext(Hint.newBuilder().setTeam(Team.BLUE_TEAM).setWord("hint").setNumber("2").build());
+		hintObserver.onNext(Hint.newBuilder().setTeam(Type.BLUE).setWord("hint").setNumber(2).build());
 		Thread.sleep(10000L);
 		hintObserver.onCompleted();
 		channel.shutdown();

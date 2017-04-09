@@ -1,7 +1,6 @@
 package com.axolotl.kohdneyms;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,24 +8,24 @@ import java.util.Random;
 
 import com.axolotl.kohdneyms.Kohdneyms.Board;
 import com.axolotl.kohdneyms.Kohdneyms.Piece;
-import com.axolotl.kohdneyms.Kohdneyms.PieceType;
+import com.axolotl.kohdneyms.Kohdneyms.Type;
 
 public class BoardGenerator {
 	private String[] wordlist = "time,year,people,way,day,man,thing,woman,life,child,world,school,state,family,student,group,country,problem,hand,part,place,case,week,company,system,program,question,work,government,number,night,point,home,water,room,mother,area,money,story,fact,month,lot,right,study,book,eye,job,word,business,issue,side,kind,head,house,service,friend,father,power,hour,game,line,end,member,law,car,city,community,name,president,team,minute,idea,kid,body,information,back,parent,face,others,level,office,door,health,person,art,war,history,party,result,change,morning,reason,research,girl,guy,moment,air,teacher,force,education".split(",");
 	private List<String> selectedWords = new ArrayList<String>();
 	private Random random = new Random();
-	private Map<PieceType,Integer> pieceTypeCounts = new HashMap<Kohdneyms.PieceType, Integer>();
-	private Map<PieceType,Integer> pieceTypeMaximums = new HashMap<Kohdneyms.PieceType, Integer>();
+	private Map<Type,Integer> pieceTypeCounts = new HashMap<Kohdneyms.Type, Integer>();
+	private Map<Type,Integer> pieceTypeMaximums = new HashMap<Kohdneyms.Type, Integer>();
 	
 	public BoardGenerator(){
-		pieceTypeCounts.put(PieceType.BLUE, 0);
-		pieceTypeCounts.put(PieceType.RED, 0);
-		pieceTypeCounts.put(PieceType.CIVILIAN, 0);
-		pieceTypeCounts.put(PieceType.ASSASSIN, 0);
-		pieceTypeMaximums.put(PieceType.BLUE, 8);
-		pieceTypeMaximums.put(PieceType.RED, 8);
-		pieceTypeMaximums.put(PieceType.CIVILIAN, 8);
-		pieceTypeMaximums.put(PieceType.ASSASSIN, 1);
+		pieceTypeCounts.put(Type.BLUE, 0);
+		pieceTypeCounts.put(Type.RED, 0);
+		pieceTypeCounts.put(Type.CIVILIAN, 0);
+		pieceTypeCounts.put(Type.ASSASSIN, 0);
+		pieceTypeMaximums.put(Type.BLUE, 8);
+		pieceTypeMaximums.put(Type.RED, 8);
+		pieceTypeMaximums.put(Type.CIVILIAN, 8);
+		pieceTypeMaximums.put(Type.ASSASSIN, 1);
 	}
 
 	public Board generate() {
@@ -34,11 +33,12 @@ public class BoardGenerator {
 		while(pieces.size() < 25){
 			pieces.add(generatePiece());
 		}
-		return Board.newBuilder().addAllBoard(pieces).build();
+		Type starter = Type.valueOf(random.nextInt(2));
+		return Board.newBuilder().addAllBoard(pieces).setStarter(starter).build();
 	}
 	
 	private Piece generatePiece() {
-		PieceType type = generateType();
+		Type type = generateType();
 		String word = generateWord();
 		selectedWords.add(word);
 		return Piece.newBuilder()
@@ -55,10 +55,10 @@ public class BoardGenerator {
 		return word;
 	}
 	
-	private PieceType generateType() {		
-		PieceType type  = PieceType.valueOf(random.nextInt(4));
+	private Type generateType() {		
+		Type type  = Type.valueOf(random.nextInt(4));
 		while(pieceTypeCounts.get(type) ==  pieceTypeMaximums.get(type)) {
-			type  = PieceType.valueOf(random.nextInt(4));
+			type  = Type.valueOf(random.nextInt(4));
 		}
 		int count = pieceTypeCounts.get(type);
 		count = count+1;

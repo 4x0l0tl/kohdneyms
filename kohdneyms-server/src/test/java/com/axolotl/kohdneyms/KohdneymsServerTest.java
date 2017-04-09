@@ -20,7 +20,7 @@ import com.axolotl.kohdneyms.Kohdneyms.Hint;
 import com.axolotl.kohdneyms.Kohdneyms.HintFromServer;
 import com.axolotl.kohdneyms.Kohdneyms.PlayerSelection;
 import com.axolotl.kohdneyms.Kohdneyms.Role;
-import com.axolotl.kohdneyms.Kohdneyms.Team;
+import com.axolotl.kohdneyms.Kohdneyms.Type;
 
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -52,7 +52,7 @@ public class KohdneymsServerTest {
 	
 	@Test
 	public void test(){
-		PlayerSelection selection = PlayerSelection.newBuilder().setRole(Role.SPYMASTER).setTeam(Team.BLUE_TEAM).build();
+		PlayerSelection selection = PlayerSelection.newBuilder().setRole(Role.SPYMASTER).setTeam(Type.BLUE).build();
 		Board board = blockingStub.initialise(selection);
 		assertNotNull(board);
 		assertEquals(25,board.getBoardCount());
@@ -78,7 +78,7 @@ public class KohdneymsServerTest {
 			}
 		};
 		StreamObserver<Hint> requestObserver  = asyncStub.giveHint(responseObserver);
-		requestObserver.onNext(Hint.newBuilder().setWord("test").setTeam(Team.BLUE_TEAM).setNumber("2").build());
+		requestObserver.onNext(Hint.newBuilder().setWord("test").setTeam(Type.BLUE).setNumber(2).build());
 		requestObserver.onCompleted();
 		responseObserver.onCompleted();
 	}
